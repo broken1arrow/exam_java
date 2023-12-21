@@ -26,6 +26,9 @@ public class Main_Exam {
 				"# LTU Lab Assistant Manager\n" +
 				"----------------------------------\n");
 		String[][] users = new String[10][ROW_LENGTH];
+		//Have npo time to implement this for 4 and 5.
+		int[][][] logUsersSalary = new int[10][5][ROW_LENGTH];
+
 		while (true) {
 			menu();
 			int option = input();
@@ -51,8 +54,10 @@ public class Main_Exam {
 					} while (userId <= 0);
 					String startTime = setTime("Enter start time of the session:");
 					String endTime = setTime("Enter end time of the session:");
-					setTimeDataToUser(users, userId, startTime, endTime, "2023-12-21");
+					String date = setDate("Enter date formatted dd-mm-yyyy");
+					setTimeDataToUser(users, userId, startTime, endTime, date);
 				case 4:
+
 				case 5:
 				default:
 					if (option == -1)
@@ -61,6 +66,19 @@ public class Main_Exam {
 						System.out.println("Type in valid option. [1,2,3,4,5,q]");
 			}
 		}
+	}
+
+	private static String setDate(String message) {
+		do {
+			System.out.println(message);
+			String date = scanner.next();
+			String[] dateSpited = message.split("-");
+			if (dateSpited.length >= 3) {
+				return date;
+			} else {
+				System.out.println("this input " + date + " is not valid. Should be formatted 00:00");
+			}
+		} while (true);
 	}
 
 	private static String setTime(String message) {
@@ -124,10 +142,39 @@ public class Main_Exam {
 				users[i][START_TIME] = startTime;
 				users[i][END_TIME] = endTime;
 				users[i][DATE] = date;
+				System.out.println("Lab assistant " + users[i][USER_NAME]);
+				String[] start = startTime.split(":");
+				String[] end = endTime.split(":");
+				int totalHoers = getTotalTime(start, end, 0);
+				int totalMinute = getTotalTime(start, end, 1);
+
+				System.out.println("Session time: " + totalHoers + " hours " + totalMinute + " minutes");
+				int educationCredits = getInteger(users[i][EDUCATION_CREDITS]);
+				int salary = getSalary(totalHoers, educationCredits);
+
+				System.out.println("Salary " + salary);
 				return;
 			}
 		}
 		System.out.println("could not find this ID " + userId);
+	}
+
+	private static int getSalary(final int totalHoers, final int educationCredits) {
+		int credit = 0;
+		if (educationCredits < 100)
+			credit = 120 * totalHoers;
+		if (educationCredits > 99 && educationCredits < 250)
+			credit = 140 * totalHoers;
+		if (educationCredits > 249 && educationCredits < 400)
+			credit = 160 * totalHoers;
+		return credit;
+	}
+
+	private static int getTotalTime(final String[] start, String[] end, int timeUnit) {
+		int startTime = getInteger(start[timeUnit]);
+		int endTime = getInteger(end[timeUnit]);
+
+		return Math.max(startTime, endTime) - Math.min(startTime, endTime);
 	}
 
 	private static int getCredit() {
@@ -253,5 +300,6 @@ public class Main_Exam {
 		return users;
 	}
 }
+
 
 
