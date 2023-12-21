@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 /*
  */
 public class Main_Exam {
-public class Main_Exam_fix {
 
 	static final Scanner scanner = new Scanner(System.in);
 	private static final int START_NUMBER = 1000;
